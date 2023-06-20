@@ -1,0 +1,140 @@
+$bg-color: #000116;
+$ball-color: #000116;
+$text-color: #eee;
+
+$text_num: 7;
+
+$duration: 1s;
+
+$ball-box-w: 300px;
+$ball-width: 30px;
+$font-size: 30px;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    background-color: $bg-color;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.switcher-ball {
+    width: $ball-box-w;
+
+    .ball {
+        width: 100%;
+        height: $ball-box-w;
+        position: relative;
+
+        span {
+            width: $ball-width;
+            height: $ball-width;
+            background-color: #eee;
+            display: block;
+            border-radius: ($ball-width / 2);
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, 0);
+
+            @for $i from 1 through 3 {
+                &:nth-child(#{$i}) {
+                    background-color: rgba(#eee, (1 / $i));
+                    animation: ball ease-in $duration #{($duration / 30) * $i} infinite alternate;
+                }
+            }
+        }
+
+        @keyframes ball {
+            90% {
+                height: $ball-width;
+                top: 100%;
+                transform: translate(-50%, -100%);
+            }
+            100% {
+                height: ($ball-width / 2);
+                top: 100%;
+                transform: translate(-50%, -100%);
+            }
+        }
+    }
+
+    .texts {
+        color: $text-color;
+        font-size: $font-size;
+        font-family: "Modak", cursive;
+        text-transform: uppercase;
+        width: $ball-box-w;
+        height: ($font-size * 2.5);
+        border-radius: 6px;
+        position: relative;
+
+        div {
+            width: 100%;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 25px;
+            padding: 12.5px 0;
+            position: absolute;
+            top: 0;
+            animation: div ease-out ($duration * $text_num * 2) ($duration) infinite;
+            transform: translateY(-100%);
+
+            @keyframes div {
+                @for $i from 1 through $text_num {
+                    $show: 100% / $text_num * $i;
+                    $m_p: (100% / $text_num) / 2;
+
+                    #{$show - $m_p},
+                    #{$show} {
+                        transform: translateY(#{-100 + (100% / $text_num * $i)});
+                    }
+                }
+            }
+
+            span.text {
+                text-align: center;
+                width: 100%;
+                display: block;
+                overflow: hidden;
+                opacity: 0;
+                height: $font-size;
+                position: relative;
+                word-spacing: -5px;
+
+                @for $i from 1 through $text_num {
+                    &:nth-child(#{$i}) {
+                        animation: text#{$i} ($duration * $text_num * 2) infinite both;
+                    }
+                }
+            }
+
+            @for $i from 1 through $text_num {
+                $show: 100% / $text_num * $i;
+                $m_p: (100% / $text_num) / 2;
+
+                @keyframes text#{$i} {
+                    #{$show - $m_p} {
+                        word-spacing: -5px;
+                        opacity: 0;
+                    }
+                    #{$show} {
+                        opacity: 1;
+                        word-spacing: 0px;
+                    }
+                    #{$show + $m_p * 2} {
+                        word-spacing: 0px;
+                        opacity: 0;
+                    }
+                }
+            }
+        }
+    }
+}
